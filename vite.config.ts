@@ -9,8 +9,10 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 export default defineConfig((config) => {
-  // Obtenemos el host principal desde las variables de entorno de EasyPanel si existen
-  const primaryHost = process.env.PRIMARY_DOMAIN || 'localhost';
+  // --- INICIO DE LA MODIFICACIÓN (Depuración) ---
+  // Vamos a usar el host exacto del error para forzar la configuración.
+  const primaryHost = 'profes-os-boltdiy.rcx58e.easypanel.host';
+  // --- FIN DE LA MODIFICACIÓN ---
 
   return {
     define: {
@@ -19,19 +21,17 @@ export default defineConfig((config) => {
     build: {
       target: 'esnext',
     },
-    // --- INICIO DE LA MODIFICACIÓN ---
     server: {
       host: true, // Escucha en todas las interfaces de red
-      allowedHosts: 'all', // Permite cualquier host
-      // Configuración para Hot Module Replacement (HMR) detrás de un proxy
+      // --- INICIO DE LA MODIFICACIÓN (Depuración) ---
+      // Usamos el host específico en lugar de 'all'
+      allowedHosts: [primaryHost],
+      // --- FIN DE LA MODIFICACIÓN ---
       hmr: {
-        // Le decimos a Vite que el cliente se conectará a este host
-        // Usamos la variable de entorno si está disponible
         host: primaryHost,
         protocol: 'wss', // Usar WebSockets seguros (wss) ya que tienes HTTPS
       },
     },
-    // --- FIN DE LA MODIFICACIÓN ---
     plugins: [
       nodePolyfills({
         include: ['buffer', 'process', 'util', 'stream'],
