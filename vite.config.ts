@@ -16,6 +16,14 @@ export default defineConfig((config) => {
     build: {
       target: 'esnext',
     },
+    // --- INICIO DE LA MODIFICACIÓN ---
+    server: {
+      // Necesario para que Vite sea accesible desde la red en EasyPanel/Docker
+      host: true,
+      // Soluciona el error permitiendo el acceso desde el dominio de EasyPanel
+      allowedHosts: 'all',
+    },
+    // --- FIN DE LA MODIFICACIÓN ---
     plugins: [
       nodePolyfills({
         include: ['buffer', 'process', 'util', 'stream'],
