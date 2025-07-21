@@ -9,6 +9,9 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 export default defineConfig((config) => {
+  // Obtenemos el host principal desde las variables de entorno de EasyPanel si existen
+  const primaryHost = process.env.PRIMARY_DOMAIN || 'localhost';
+
   return {
     define: {
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
@@ -18,10 +21,15 @@ export default defineConfig((config) => {
     },
     // --- INICIO DE LA MODIFICACIÓN ---
     server: {
-      // Necesario para que Vite sea accesible desde la red en EasyPanel/Docker
-      host: true,
-      // Soluciona el error permitiendo el acceso desde el dominio de EasyPanel
-      allowedHosts: 'all',
+      host: true, // Escucha en todas las interfaces de red
+      allowedHosts: 'all', // Permite cualquier host
+      // Configuración para Hot Module Replacement (HMR) detrás de un proxy
+      hmr: {
+        // Le decimos a Vite que el cliente se conectará a este host
+        // Usamos la variable de entorno si está disponible
+        host: primaryHost,
+        protocol: 'wss', // Usar WebSockets seguros (wss) ya que tienes HTTPS
+      },
     },
     // --- FIN DE LA MODIFICACIÓN ---
     plugins: [
