@@ -5,14 +5,11 @@ import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import { optimizeCssModules } from 'vite-plugin-optimize-css-modules';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import * as dotenv from 'dotenv';
-
 dotenv.config();
 
 export default defineConfig((config) => {
-  // --- INICIO DE LA MODIFICACIÓN (Depuración) ---
-  // Vamos a usar el host exacto del error para forzar la configuración.
+  // Host primario que queremos permitir
   const primaryHost = 'profes-os-boltdiy.rcx58e.easypanel.host';
-  // --- FIN DE LA MODIFICACIÓN ---
 
   return {
     define: {
@@ -22,14 +19,11 @@ export default defineConfig((config) => {
       target: 'esnext',
     },
     server: {
-      host: true, // Escucha en todas las interfaces de red
-      // --- INICIO DE LA MODIFICACIÓN (Depuración) ---
-      // Usamos el host específico en lugar de 'all'
-      allowedHosts: [profes-os-boltdiy.rcx58e.easypanel.host],
-      // --- FIN DE LA MODIFICACIÓN ---
+      host: true, // Escucha en todas las interfaces
+      allowedHosts: [primaryHost], // 🔹 Host permitido
       hmr: {
         host: primaryHost,
-        protocol: 'wss', // Usar WebSockets seguros (wss) ya que tienes HTTPS
+        protocol: 'wss', // WebSockets seguros
       },
     },
     plugins: [
@@ -52,7 +46,6 @@ export default defineConfig((config) => {
               map: null,
             };
           }
-
           return null;
         },
       },
@@ -93,20 +86,16 @@ function chrome129IssuePlugin() {
     configureServer(server: ViteDevServer) {
       server.middlewares.use((req, res, next) => {
         const raw = req.headers['user-agent']?.match(/Chrom(e|ium)\/([0-9]+)\./);
-
         if (raw) {
           const version = parseInt(raw[2], 10);
-
           if (version === 129) {
             res.setHeader('content-type', 'text/html');
             res.end(
               '<body><h1>Please use Chrome Canary for testing.</h1><p>Chrome 129 has an issue with JavaScript modules & Vite local development, see <a href="https://github.com/stackblitz/bolt.new/issues/86#issuecomment-2395519258">for more information.</a></p><p><b>Note:</b> This only impacts <u>local development</u>. `pnpm run build` and `pnpm run start` will work fine in this browser.</p></body>',
             );
-
             return;
           }
         }
-
         next();
       });
     },
