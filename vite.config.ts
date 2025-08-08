@@ -25,7 +25,7 @@ export default defineConfig((config) => {
       host: true, // Escucha en todas las interfaces de red
       // --- INICIO DE LA MODIFICACIÓN (Depuración) ---
       // Usamos el host específico en lugar de 'all'
-      allowedHosts: [primaryHost],
+      allowedHosts: [profes-os-boltdiy.rcx58e.easypanel.host],
       // --- FIN DE LA MODIFICACIÓN ---
       hmr: {
         host: primaryHost,
