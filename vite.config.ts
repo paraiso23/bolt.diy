@@ -8,7 +8,7 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 export default defineConfig((config) => {
-  // Host primario que queremos permitir
+  // Host principal (aunque con '.' permitimos todos)
   const primaryHost = 'profes-os-boltdiy.rcx58e.easypanel.host';
 
   return {
@@ -20,7 +20,7 @@ export default defineConfig((config) => {
     },
     server: {
       host: true, // Escucha en todas las interfaces
-      allowedHosts: [primaryHost], // 🔹 Host permitido
+      allowedHosts: ['.'], // Permite todos los hosts (comodín)
       hmr: {
         host: primaryHost,
         protocol: 'wss', // WebSockets seguros
