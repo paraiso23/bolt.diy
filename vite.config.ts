@@ -8,7 +8,6 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 export default defineConfig((config) => {
-  // Host principal (aunque con '.' permitimos todos)
   const primaryHost = 'profes-os-boltdiy.rcx58e.easypanel.host';
 
   return {
@@ -19,11 +18,12 @@ export default defineConfig((config) => {
       target: 'esnext',
     },
     server: {
-      host: true, // Escucha en todas las interfaces
-      allowedHosts: ['.'], // Permite todos los hosts (comodín)
+      host: true,
+      // Aquí ponemos EXACTAMENTE el host que te da el error (como string dentro de un array)
+      allowedHosts: ['profes-os-boltdiy.rcx58e.easypanel.host'],
       hmr: {
         host: primaryHost,
-        protocol: 'wss', // WebSockets seguros
+        protocol: 'wss'
       },
     },
     plugins: [
